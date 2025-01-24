@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 function VideoTranscription() {
   const [videoFile, setVideoFile] = useState(null);
   const [transcription, setTranscription] = useState('');
+  const [translation, setTranslation] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
@@ -28,7 +29,8 @@ function VideoTranscription() {
 
       if (response.ok) {
         const result = await response.json();
-        setTranscription(result.transcription);
+        setTranscription(result.transcription); // 한글 대본
+        setTranslation(result.translation); // 영어 번역 대본
       } else {
         const errorData = await response.json();
         alert(`업로드 실패: ${errorData.detail}`);
@@ -52,8 +54,14 @@ function VideoTranscription() {
       </form>
       {transcription && (
         <div>
-          <h2>대본 결과:</h2>
+          <h2>한글 대본 결과:</h2>
           <pre>{transcription}</pre>
+        </div>
+      )}
+      {translation && (
+        <div>
+          <h2>영어 번역 결과:</h2>
+          <pre>{translation}</pre>
         </div>
       )}
     </div>
