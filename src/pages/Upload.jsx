@@ -86,12 +86,11 @@ function VideoUpload() {
               {/* 🎵 배경음 재생 */}
               <audio controls>
                 <source
-                  src={`http://localhost:8000/audio/${videoData.background_music.file_path
-                    .replace(/^extracted_audio[\\/]/, '') // "extracted_audio/" 부분 제거
-                    .replace(/\\/g, '/')}`} // Windows 백슬래시를 슬래시로 변환
+                  src={`http://localhost:8000/extracted_audio/${videoData.background_music.file_path
+                    .replace(/^extracted_audio[\\/]/, '')
+                    .replace(/\\/g, '/')}`}
                   type="audio/mp3"
                 />
-                브라우저가 오디오 태그를 지원하지 않습니다.
               </audio>
             </>
           ) : (
@@ -119,12 +118,11 @@ function VideoUpload() {
                   {/* 🎤 TTS 음성 재생 */}
                   <audio controls>
                     <source
-                      src={`http://localhost:8000/audio/${tts.file_path
-                        .replace(/^extracted_audio[\\/]/, '') // "extracted_audio/" 부분 제거
-                        .replace(/\\/g, '/')}`} // Windows 백슬래시를 슬래시로 변환
+                      src={`http://localhost:8000/extracted_audio/${tts.file_path
+                        .replace(/^extracted_audio[\\/]/, '')
+                        .replace(/\\/g, '/')}`}
                       type="audio/mp3"
                     />
-                    브라우저가 오디오 태그를 지원하지 않습니다.
                   </audio>
                 </li>
               ))}

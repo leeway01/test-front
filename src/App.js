@@ -5,6 +5,7 @@ import SignUp from './pages/SignUp';
 import Header from './components/Header';
 import Upload from './pages/Upload';
 import Stt from './pages/SttVideo';
+import Generated from './pages/generate_tts';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/stt" element={<Stt />} />
+        <Route path="/generated" element={<Generated />} />
         {/* 404 대응 */}
         <Route path="*" element={<h2>404 Not Found</h2>} />
       </Routes>
