@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const TTSGenerator = () => {
+  const [ttsId, setTtsId] = useState(''); // 기존 TTS ID (수정할 경우 입력)
   const [voiceId, setVoiceId] = useState('');
   const [text, setText] = useState('');
   const [audioUrl, setAudioUrl] = useState(null);
@@ -19,12 +20,24 @@ const TTSGenerator = () => {
     setAudioUrl(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/generate-tts', {
+      const requestData = {
         voice_id: voiceId,
         text: text,
-      });
+      };
 
-      console.log('🔹 서버 응답:', response.data); // 서버 응답 로그 출력
+      // tts_id가 있으면 추가
+      if (ttsId.trim() !== '') {
+        requestData.tts_id = parseInt(ttsId, 10);
+      }
+
+      console.log('📤 요청 데이터:', requestData);
+
+      const response = await axios.post(
+        'http://localhost:8000/generate-tts',
+        requestData
+      );
+
+      console.log('🔹 서버 응답:', response.data);
 
       if (response.data.file_url) {
         setAudioUrl(`http://localhost:8000${response.data.file_url}`);
@@ -32,10 +45,9 @@ const TTSGenerator = () => {
         setError('❌ TTS 생성에 실패했습니다. (파일 URL 없음)');
       }
     } catch (err) {
-      console.error('🔴 서버 오류 발생:', err); // 전체 오류 콘솔 출력
+      console.error('🔴 서버 오류 발생:', err);
 
       if (err.response) {
-        // 서버가 응답한 경우 (에러 코드 포함)
         console.error('📌 응답 상태 코드:', err.response.status);
         console.error('📌 응답 데이터:', err.response.data);
         setError(
@@ -44,11 +56,9 @@ const TTSGenerator = () => {
           }`
         );
       } else if (err.request) {
-        // 요청이 전송되었지만 응답이 없는 경우
         console.error('📌 요청 정보:', err.request);
         setError('❌ 서버 응답이 없습니다. 백엔드가 실행 중인지 확인하세요.');
       } else {
-        // 기타 요청 설정 중 오류 발생
         console.error('📌 오류 메시지:', err.message);
         setError(`❌ 요청 중 오류 발생: ${err.message}`);
       }
@@ -60,6 +70,21 @@ const TTSGenerator = () => {
   return (
     <div style={{ maxWidth: '500px', margin: 'auto', textAlign: 'center' }}>
       <h2>🎙️ TTS Generator</h2>
+
+      <input
+        type="text"
+        placeholder="(선택) 기존 TTS ID 입력"
+        value={ttsId}
+        onChange={(e) => setTtsId(e.target.value)}
+        style={{
+          width: '100%',
+          padding: '10px',
+          marginBottom: '10px',
+          borderRadius: '5px',
+          border: '1px solid #ccc',
+        }}
+      />
+
       <input
         type="text"
         placeholder="Voice ID 입력"
@@ -73,6 +98,7 @@ const TTSGenerator = () => {
           border: '1px solid #ccc',
         }}
       />
+
       <textarea
         placeholder="텍스트 입력"
         value={text}
@@ -87,6 +113,7 @@ const TTSGenerator = () => {
           resize: 'none',
         }}
       />
+
       <button
         onClick={handleGenerateTTS}
         style={{
