@@ -29,7 +29,7 @@ const CreateVoiceModel = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8000/create-voice-model',
+        'http://localhost:8001/create-voice-model',
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },

@@ -33,14 +33,14 @@ const TTSGenerator = () => {
       console.log('📤 요청 데이터:', requestData);
 
       const response = await axios.post(
-        'http://localhost:8000/generate-tts',
+        'http://localhost:8001/generate-tts',
         requestData
       );
 
       console.log('🔹 서버 응답:', response.data);
 
       if (response.data.file_url) {
-        setAudioUrl(`http://localhost:8000${response.data.file_url}`);
+        setAudioUrl(`http://localhost:8001${response.data.file_url}`);
       } else {
         setError('❌ TTS 생성에 실패했습니다. (파일 URL 없음)');
       }
