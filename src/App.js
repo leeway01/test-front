@@ -6,6 +6,7 @@ import Header from './components/Header';
 import Upload from './pages/Upload';
 import Stt from './pages/SttVideo';
 import Generated from './pages/generate_tts';
+import CreateVoice from './pages/createVoiceModel';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/upload" element={<Upload />} />
         <Route path="/stt" element={<Stt />} />
         <Route path="/generated" element={<Generated />} />
+        <Route path="/createvoice" element={<CreateVoice />} />
         {/* 404 대응 */}
         <Route path="*" element={<h2>404 Not Found</h2>} />
       </Routes>

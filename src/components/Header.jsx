@@ -7,7 +7,8 @@ function Header() {
       <nav>
         <Link to="/">홈</Link> | <Link to="/signup">회원가입</Link> |{' '}
         <Link to="/upload">파일 업로드</Link> | <Link to="/stt">대본 추출</Link>{' '}
-        | <Link to="/generated">tts 제작</Link>
+        | <Link to="/generated">tts 제작</Link> |{' '}
+        <Link to="/createvoice">음성 모델 제작</Link>
       </nav>
     </header>
   );
