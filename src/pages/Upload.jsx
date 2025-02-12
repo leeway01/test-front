@@ -114,7 +114,12 @@ function VideoUpload() {
                   <p>
                     <strong>목소리:</strong> {tts.voice}
                   </p>
-
+                  <p>
+                    <strong>번역 텍스트:</strong> {tts.translated_text}
+                  </p>
+                  <p>
+                    <strong>화자:</strong> {tts.speaker}
+                  </p>
                   {/* 🎤 TTS 음성 재생 */}
                   <audio controls>
                     <source
