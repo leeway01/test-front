@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 function VideoUpload() {
   const [videoFile, setVideoFile] = useState(null);
   const [responseMessage, setResponseMessage] = useState('');
-  const [videoData, setVideoData] = useState(null); // JSON 데이터 저장
+  const [videoData, setVideoData] = useState(null); // 서버에서 반환된 JSON 데이터 저장
 
   const handleFileChange = (e) => {
     setVideoFile(e.target.files[0]);
@@ -52,6 +52,52 @@ function VideoUpload() {
 
       {videoData && (
         <div>
+          {/* 전체 처리 시간 및 단계별 시간 표시 */}
+          {videoData.timings && (
+            <div>
+              <h2>⏱️ 처리 시간</h2>
+              <p>
+                <strong>총 처리 시간:</strong>{' '}
+                {videoData.timings.overall_time.toFixed(2)} 초
+              </p>
+              <h3>각 단계별 처리 시간</h3>
+              <ul>
+                <li>
+                  <strong>업로드 시간:</strong>{' '}
+                  {videoData.timings.upload_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>오디오 추출 시간:</strong>{' '}
+                  {videoData.timings.audio_extraction_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>Spleeter 분리 시간:</strong>{' '}
+                  {videoData.timings.spleeter_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>DB 저장 시간:</strong>{' '}
+                  {videoData.timings.db_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>STT 처리 시간:</strong>{' '}
+                  {videoData.timings.stt_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>번역 처리 시간:</strong>{' '}
+                  {videoData.timings.translation_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>TTS 생성 시간:</strong>{' '}
+                  {videoData.timings.tts_time.toFixed(2)} 초
+                </li>
+                <li>
+                  <strong>최종 결과 조회 시간:</strong>{' '}
+                  {videoData.timings.get_time.toFixed(2)} 초
+                </li>
+              </ul>
+            </div>
+          )}
+
           <h2>📌 비디오 정보</h2>
           <p>
             <strong>파일명:</strong> {videoData.video.file_name}
