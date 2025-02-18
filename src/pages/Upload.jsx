@@ -164,6 +164,9 @@ function VideoUpload() {
                     <strong>번역 텍스트:</strong> {tts.translated_text}
                   </p>
                   <p>
+                    <strong>원본 텍스트:</strong> {tts.original_text}
+                  </p>
+                  <p>
                     <strong>화자:</strong> {tts.speaker}
                   </p>
                   {/* 🎤 TTS 음성 재생 */}
