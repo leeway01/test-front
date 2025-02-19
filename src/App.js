@@ -7,6 +7,7 @@ import Upload from './pages/Upload';
 import Stt from './pages/SttVideo';
 import Generated from './pages/generate_tts';
 import CreateVoice from './pages/createVoiceModel';
+import Audio from './pages/audio';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/stt" element={<Stt />} />
         <Route path="/generated" element={<Generated />} />
         <Route path="/createvoice" element={<CreateVoice />} />
+        <Route path="/audio" element={<Audio />} />
         {/* 404 대응 */}
         <Route path="*" element={<h2>404 Not Found</h2>} />
       </Routes>
