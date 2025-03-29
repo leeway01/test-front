@@ -1,81 +1,139 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
 
-const CreateVoiceModel = () => {
+function CreateVoiceCloneForm() {
   const [name, setName] = useState('');
+  const [files, setFiles] = useState([]);
   const [description, setDescription] = useState('');
-  const [file, setFile] = useState(null);
-  const [voiceId, setVoiceId] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  // react-dropzone 파일 핸들러
+  const onDrop = useCallback((acceptedFiles) => {
+    // 기존 파일 배열에 추가 (여러 파일 선택 가능)
+    setFiles((prev) => [...prev, ...acceptedFiles]);
+  }, []);
 
-  const handleCreateModel = async () => {
-    if (!name || !description || !file) {
-      setError('모든 필드를 입력하세요.');
-      return;
-    }
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: 'audio/*',
+  });
 
-    setLoading(true);
-    setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('description', description);
-    formData.append('file', file);
+
+    // 여러 파일 추가
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    // remove_background_noise를 항상 true로 설정 (서버가 지원하는 경우)
+    // 만약 서버 코드에 이 필드가 필요 없다면 제거해도 됩니다.
+    formData.append('remove_background_noise', true);
+
+    if (description) {
+      formData.append('description', description);
+    }
 
     try {
-      const response = await axios.post(
-        'http://localhost:8001/create-voice-model',
-        formData,
+      const response = await fetch(
+        'http://ec2-3-26-190-145.ap-southeast-2.compute.amazonaws.com:8001/create-voice-model',
         {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          method: 'POST',
+          body: formData,
         }
       );
 
-      console.log('✅ 서버 응답:', response.data);
-      setVoiceId(response.data.voice_id);
-    } catch (err) {
-      console.error('❌ 서버 오류 발생:', err);
-
-      if (err.response) {
-        console.error('📌 응답 상태 코드:', err.response.status);
-        console.error('📌 응답 데이터:', err.response.data);
-        setError(`서버 오류: ${err.response.data.detail || '알 수 없는 오류'}`);
-      } else {
-        setError('서버 응답이 없습니다. 백엔드가 실행 중인지 확인하세요.');
+      if (!response.ok) {
+        throw new Error(`Server responded with status: ${response.status}`);
       }
-    } finally {
-      setLoading(false);
+
+      const result = await response.json();
+      // 서버 응답에 voice_id, db_id 등이 포함되어 있다고 가정
+      setMessage(
+        `Voice model created! voice_id: ${result.voice_id}, db_id: ${result.db_id}`
+      );
+    } catch (error) {
+      console.error(error);
+      setMessage(`Error: ${error.message}`);
     }
   };
 
   return (
-    <div>
-      <h2>🎙️ 보이스 모델 생성</h2>
-      <input
-        type="text"
-        placeholder="모델 이름"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="설명"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleCreateModel} disabled={loading}>
-        {loading ? '생성 중...' : '모델 생성'}
-      </button>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {voiceId && <p>✅ 생성된 Voice ID: {voiceId}</p>}
+    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
+      <h2>Create Voice Model</h2>
+      <form onSubmit={handleSubmit}>
+        {/* name (Required) */}
+        <div style={{ marginBottom: '10px' }}>
+          <label>Name (Required):</label>
+          <br />
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        {/* Drag & Drop 파일 입력 */}
+        <div style={{ marginBottom: '10px' }}>
+          <label>Upload Voice Samples (Required):</label>
+          <div
+            {...getRootProps()}
+            style={{
+              border: '2px dashed #ccc',
+              padding: '20px',
+              textAlign: 'center',
+              cursor: 'pointer',
+              backgroundColor: isDragActive ? '#e6f7ff' : '#fafafa',
+            }}
+          >
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p>Drop the files here ...</p>
+            ) : (
+              <p>Drag & drop some files here, or click to select files</p>
+            )}
+          </div>
+          {files.length > 0 && (
+            <div style={{ marginTop: '10px' }}>
+              <strong>Selected files:</strong>
+              <ul>
+                {files.map((file, index) => (
+                  <li key={index}>{file.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* description (Optional) */}
+        <div style={{ marginBottom: '10px' }}>
+          <label>Description (Optional):</label>
+          <br />
+          <textarea
+            rows={3}
+            style={{ width: '100%' }}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+
+        <button type="submit" style={{ marginTop: '10px' }}>
+          Create Voice Model
+        </button>
+      </form>
+
+      {message && (
+        <div style={{ marginTop: '20px', color: 'blue' }}>
+          <strong>{message}</strong>
+        </div>
+      )}
     </div>
   );
-};
+}
 
-export default CreateVoiceModel;
+export default CreateVoiceCloneForm;
