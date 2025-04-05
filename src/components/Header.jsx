@@ -11,7 +11,8 @@ function Header() {
         <Link to="/createvoice">음성 모델 제작</Link> |{' '}
         <Link to="/audio">Audio</Link> | <Link to="/translate">번역</Link> |{' '}
         <Link to="/filelist">파일 관리</Link> |{' '}
-        <Link to="/project">프로젝트</Link>
+        <Link to="/project">프로젝트</Link> |{' '}
+        <Link to="/userfilemanage">유저파일관리</Link>
       </nav>
     </header>
   );

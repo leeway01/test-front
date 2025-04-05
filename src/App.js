@@ -13,6 +13,7 @@ import FileList from './pages/FileList';
 import FileDetails from './pages/FileDetails';
 import Project from './pages/Project';
 import ProjectInfor from './pages/ProjectInfor';
+import UserFileManage from './pages/UserFilemanage';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/file-details" element={<FileDetails />} />
         <Route path="/project" element={<Project />} />
         <Route path="/editor/:projectId" element={<ProjectInfor />} />
+        <Route path="/userfilemanage" element={<UserFileManage />} />
         {/* 404 대응 */}
         <Route path="*" element={<h2>404 Not Found</h2>} />
       </Routes>
