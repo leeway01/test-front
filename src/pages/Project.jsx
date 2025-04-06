@@ -9,12 +9,17 @@ const ProjectManagementPage = () => {
   const [newDescription, setNewDescription] = useState('');
   const navigate = useNavigate();
 
-  // 프로젝트 목록 불러오기
+  const API_BASE =
+    'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000';
+  const token = localStorage.getItem('authToken'); // 토큰 저장 위치는 로그인 성공 시 localStorage.setItem('token', token)
+
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:8000/projects', {
+      const response = await fetch(`${API_BASE}/projects`, {
         method: 'GET',
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       if (!response.ok) {
         const data = await response.json();
@@ -32,16 +37,17 @@ const ProjectManagementPage = () => {
     fetchProjects();
   }, []);
 
-  // 프로젝트 추가 요청
   const handleAddProject = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData();
       formData.append('project_name', newProjectName);
       formData.append('description', newDescription);
-      const response = await fetch('http://localhost:8000/projects/add', {
+      const response = await fetch(`${API_BASE}/projects/add`, {
         method: 'POST',
-        credentials: 'include',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
       if (!response.ok) {
@@ -49,7 +55,6 @@ const ProjectManagementPage = () => {
         setError(data.detail || '프로젝트 추가 실패');
         return;
       }
-      // 프로젝트 추가 성공 후 목록 새로고침
       setNewProjectName('');
       setNewDescription('');
       setShowAddForm(false);
@@ -59,29 +64,25 @@ const ProjectManagementPage = () => {
     }
   };
 
-  // 프로젝트 클릭 시, 선택한 프로젝트 ID를 localStorage에 저장하고 편집기 페이지로 이동
   const handleProjectClick = (projectId) => {
     localStorage.setItem('currentProjectId', projectId);
     navigate(`/editor/${projectId}`);
   };
 
-  // 프로젝트 삭제 요청
   const handleDeleteProject = async (projectId) => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return;
     try {
-      const response = await fetch(
-        `http://localhost:8000/projects/${projectId}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        }
-      );
+      const response = await fetch(`${API_BASE}/projects/${projectId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (!response.ok) {
         const data = await response.json();
         setError(data.detail || '프로젝트 삭제 실패');
         return;
       }
-      // 삭제 성공 후 목록 새로고침
       fetchProjects();
     } catch (err) {
       setError('네트워크 에러가 발생했습니다.');

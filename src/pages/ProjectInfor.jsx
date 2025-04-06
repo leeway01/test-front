@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL =
+  'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000';
 
 function ProjectEditDataPage() {
   const { projectId } = useParams();

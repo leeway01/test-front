@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL =
+  'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000';
 
 const UserFileManager = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -8,6 +9,12 @@ const UserFileManager = () => {
   const [uploadMessage, setUploadMessage] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
   const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const token = localStorage.getItem('authToken');
+
+  const getAuthHeaders = () => ({
+    Authorization: `Bearer ${token}`,
+  });
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -24,8 +31,8 @@ const UserFileManager = () => {
     try {
       const response = await fetch(`${BASE_URL}/upload-file`, {
         method: 'POST',
+        headers: getAuthHeaders(),
         body: formData,
-        credentials: 'include',
       });
       const data = await response.json();
       if (!response.ok) {
@@ -43,7 +50,7 @@ const UserFileManager = () => {
     try {
       const response = await fetch(`${BASE_URL}/user-files`, {
         method: 'GET',
-        credentials: 'include',
+        headers: getAuthHeaders(),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -63,7 +70,7 @@ const UserFileManager = () => {
         `${BASE_URL}/user-files?file=${encodeURIComponent(fileName)}`,
         {
           method: 'DELETE',
-          credentials: 'include',
+          headers: getAuthHeaders(),
         }
       );
       const data = await response.json();
@@ -84,7 +91,7 @@ const UserFileManager = () => {
         `${BASE_URL}/download-file?file_name=${encodeURIComponent(fileName)}`,
         {
           method: 'GET',
-          credentials: 'include',
+          headers: getAuthHeaders(),
         }
       );
       if (!response.ok) {

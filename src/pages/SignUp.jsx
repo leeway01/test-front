@@ -9,11 +9,11 @@ function AuthPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // mode에 따라 로그인 또는 회원가입 엔드포인트 호출
     const endpoint =
       mode === 'login'
-        ? 'http://localhost:8000/login'
-        : 'http://localhost:8000/signup';
+        ? 'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000/login'
+        : 'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000/signup';
+
     const formData = new FormData();
     formData.append('username', username);
     formData.append('password', password);
@@ -22,7 +22,6 @@ function AuthPage() {
       const response = await fetch(endpoint, {
         method: 'POST',
         body: formData,
-        credentials: 'include', // 쿠키를 포함하여 요청 (HttpOnly 쿠키 적용)
       });
       const data = await response.json();
       if (!response.ok) {
@@ -30,9 +29,13 @@ function AuthPage() {
       } else {
         setMessage(data.message);
         setUserId(data.user_id);
-        // 성공 후 입력값 초기화
         setUsername('');
         setPassword('');
+
+        // 토큰 저장 (서버가 token을 응답 본문에 포함하도록 설정되어 있어야 함)
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+        }
       }
     } catch (error) {
       setMessage('네트워크 에러');
