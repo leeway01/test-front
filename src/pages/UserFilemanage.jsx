@@ -7,6 +7,7 @@ const UserFileManager = () => {
   const [files, setFiles] = useState([]);
   const [uploadMessage, setUploadMessage] = useState('');
   const [deleteMessage, setDeleteMessage] = useState('');
+  const [expandedIndex, setExpandedIndex] = useState(null);
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -99,12 +100,16 @@ const UserFileManager = () => {
     }
   };
 
+  const toggleExpand = (index) => {
+    setExpandedIndex(expandedIndex === index ? null : index);
+  };
+
   useEffect(() => {
     fetchFiles();
   }, []);
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
       <h1>사용자 파일 관리</h1>
 
       <section>
@@ -123,13 +128,42 @@ const UserFileManager = () => {
           <p>업로드된 파일이 없습니다.</p>
         ) : (
           <ul>
-            {files.map((fileName, index) => (
-              <li key={index}>
-                {fileName}{' '}
-                <button onClick={() => handleDownload(fileName)}>
+            {files.map((file, index) => (
+              <li key={index} style={{ marginBottom: '10px' }}>
+                <strong>{file.file_name}</strong>{' '}
+                <button onClick={() => handleDownload(file.file_name)}>
                   다운로드
                 </button>{' '}
-                <button onClick={() => handleDelete(fileName)}>삭제</button>
+                <button onClick={() => handleDelete(file.file_name)}>
+                  삭제
+                </button>{' '}
+                <button onClick={() => toggleExpand(index)}>
+                  {expandedIndex === index ? '접기' : '펼치기'}
+                </button>
+                {expandedIndex === index && (
+                  <div
+                    style={{
+                      marginTop: '5px',
+                      marginLeft: '20px',
+                      fontSize: '0.9em',
+                    }}
+                  >
+                    <p>📄 타입: {file.file_type}</p>
+                    {file.duration && (
+                      <p>⏱ 길이: {file.duration.toFixed(2)}초</p>
+                    )}
+                    <p>
+                      🔗 URL:{' '}
+                      <a
+                        href={file.file_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {file.file_url}
+                      </a>
+                    </p>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
