@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ProjectManagementPage = () => {
@@ -10,10 +10,11 @@ const ProjectManagementPage = () => {
   const navigate = useNavigate();
 
   const API_BASE =
-    'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000';
+    'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
   const token = localStorage.getItem('authToken'); // 토큰 저장 위치는 로그인 성공 시 localStorage.setItem('token', token)
 
-  const fetchProjects = async () => {
+  // 🔁 useCallback으로 감싼 fetchProjects 함수
+  const fetchProjects = useCallback(async () => {
     try {
       const response = await fetch(`${API_BASE}/projects`, {
         method: 'GET',
@@ -31,11 +32,12 @@ const ProjectManagementPage = () => {
     } catch (err) {
       setError('네트워크 에러가 발생했습니다.');
     }
-  };
+  }, [token]); // <- 토큰이 바뀌면 재생성
 
+  // 🔁 useEffect에서 fetchProjects를 의존성에 추가
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchProjects]);
 
   const handleAddProject = async (e) => {
     e.preventDefault();

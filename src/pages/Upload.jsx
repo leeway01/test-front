@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 // 서버 URL을 BASE_URL 변수에 저장
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL =
+  'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
 
 function VideoUpload() {
   const [videoFile, setVideoFile] = useState(null);

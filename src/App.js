@@ -12,18 +12,16 @@ import Translate from './pages/translate';
 import FileList from './pages/FileList';
 import FileDetails from './pages/FileDetails';
 import Project from './pages/Project';
-import ProjectInfor from './pages/ProjectInfor';
+import ProjectInfor from './pages/ProjectInfor'; // 수정된 상세 페이지 컴포넌트
 import UserFileManage from './pages/UserFilemanage';
+import App2 from './pages/App';
 
 function App() {
   return (
     <BrowserRouter>
-      {/* 공통 레이아웃 예: Header */}
       <Header />
-
-      {/* 라우트 설정 */}
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/stt" element={<Stt />} />
@@ -34,9 +32,10 @@ function App() {
         <Route path="/filelist" element={<FileList />} />
         <Route path="/file-details" element={<FileDetails />} />
         <Route path="/project" element={<Project />} />
+        {/* 프로젝트 카드를 클릭하면 /editor/:projectId 경로로 이동하도록 */}
         <Route path="/editor/:projectId" element={<ProjectInfor />} />
         <Route path="/userfilemanage" element={<UserFileManage />} />
-        {/* 404 대응 */}
+        <Route path="/" element={<App2 />} />
         <Route path="*" element={<h2>404 Not Found</h2>} />
       </Routes>
     </BrowserRouter>

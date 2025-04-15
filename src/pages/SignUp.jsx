@@ -11,8 +11,8 @@ function AuthPage() {
     e.preventDefault();
     const endpoint =
       mode === 'login'
-        ? 'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000/login'
-        : 'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000/signup';
+        ? 'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000/login'
+        : 'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000/signup';
 
     const formData = new FormData();
     formData.append('username', username);

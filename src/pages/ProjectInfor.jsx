@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const BASE_URL =
-  'http://ec2-54-206-239-41.ap-southeast-2.compute.amazonaws.com:8000';
+  'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
 
-function ProjectEditDataPage() {
+function ProjectInfor() {
   const { projectId } = useParams();
   const [videosData, setVideosData] = useState([]);
   const [error, setError] = useState('');
@@ -12,11 +12,13 @@ function ProjectEditDataPage() {
   useEffect(() => {
     const fetchEditData = async () => {
       try {
-        // 반드시 "/videos/edit_data" 경로로 요청
+        const token = localStorage.getItem('authToken');
         const response = await fetch(
           `${BASE_URL}/projects/${projectId}/videos/edit_data`,
           {
-            credentials: 'include',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
         if (!response.ok) {
@@ -25,7 +27,6 @@ function ProjectEditDataPage() {
           return;
         }
         const data = await response.json();
-        // "videos": [ { "video": {...}, "background_music": {...}, "tts_tracks": [...], "get_time": ... }, ... ]
         setVideosData(data.videos || []);
       } catch (err) {
         setError('네트워크 에러가 발생했습니다.');
@@ -130,4 +131,4 @@ function ProjectEditDataPage() {
   );
 }
 
-export default ProjectEditDataPage;
+export default ProjectInfor;
