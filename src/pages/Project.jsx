@@ -10,7 +10,7 @@ const ProjectManagementPage = () => {
   const navigate = useNavigate();
 
   const API_BASE =
-    'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
+    'http://ec2-43-200-163-229.ap-northeast-2.compute.amazonaws.com:8000';
   const token = localStorage.getItem('authToken'); // 토큰 저장 위치는 로그인 성공 시 localStorage.setItem('token', token)
 
   // 🔁 useCallback으로 감싼 fetchProjects 함수

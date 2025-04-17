@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const BASE_URL =
-  'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
+  'http://ec2-43-200-163-229.ap-northeast-2.compute.amazonaws.com:8000';
 
 function ProjectInfor() {
   const { projectId } = useParams();

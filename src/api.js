@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const BASE_URL =
-  'http://ec2-3-35-22-41.ap-northeast-2.compute.amazonaws.com:8000';
+  'http://ec2-43-200-163-229.ap-northeast-2.compute.amazonaws.com:8000';
 
 export const createAxiosInstance = (token = null) => {
   const instance = axios.create({ baseURL: BASE_URL });
